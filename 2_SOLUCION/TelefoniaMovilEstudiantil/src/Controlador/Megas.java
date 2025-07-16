@@ -14,6 +14,6 @@ public class Megas extends PlanPostPago {
 
     @Override
     public double calcularPagoMensaul() {
-        return 2;
+        return ((gigas * costGiga) + tarifaBase);
     }
 }

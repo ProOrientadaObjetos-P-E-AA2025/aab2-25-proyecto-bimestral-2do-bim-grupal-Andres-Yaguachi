@@ -16,6 +16,6 @@ public class Minutos extends PlanPostPago {
 
     @Override
     public double calcularPagoMensaul() {
-        return 2;
+        return ((costoMinNac * minutosNacio) + (costoMinInter * minutosInterNa));
     }
 }
