@@ -7,11 +7,13 @@ public class Minutos extends PlanPostPago {
     protected int minutosInterNa;
     protected double costoMinInter;
 
-    public Minutos(int minutosNacio, double costoMinNac, int minutosInterNa, double costoMinInter) {
+    public Minutos(int minutosNacio, double costoMinNac, int minutosInterNa, double costoMinInter, String nombrePlan) {
+        super(nombrePlan);
         this.minutosNacio = minutosNacio;
         this.costoMinNac = costoMinNac;
         this.minutosInterNa = minutosInterNa;
         this.costoMinInter = costoMinInter;
+
     }
 
     @Override

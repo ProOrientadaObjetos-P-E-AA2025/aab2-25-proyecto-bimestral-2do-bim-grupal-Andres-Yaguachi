@@ -8,12 +8,14 @@ public class MinutosMegasEconomico extends PlanPostPago {
     protected int gigas;
     protected double costGiga;
 
-    public MinutosMegasEconomico(int porcDesc, int minutos, double costoMin, int gigas, double costGiga) {
+    public MinutosMegasEconomico(int porcDesc, int minutos, double costoMin, int gigas, double costGiga, String nombrePlan) {
+        super(nombrePlan);
         this.porcDesc = porcDesc;
         this.minutos = minutos;
         this.costoMin = costoMin;
         this.gigas = gigas;
         this.costGiga = costGiga;
+
     }
 
     @Override

@@ -6,10 +6,12 @@ public class Megas extends PlanPostPago {
     protected double costGiga;
     protected double tarifaBase;
 
-    public Megas(int gigas, double costGiga, double tarifaBase) {
+    public Megas(int gigas, double costGiga, double tarifaBase, String nombrePlan) {
+        super(nombrePlan);
         this.gigas = gigas;
         this.costGiga = costGiga;
         this.tarifaBase = tarifaBase;
+
     }
 
     @Override
