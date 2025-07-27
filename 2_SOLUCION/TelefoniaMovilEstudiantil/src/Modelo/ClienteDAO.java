@@ -1,7 +1,7 @@
 package Modelo;
 
 import Util.ConexionSQLite;
-import controlador.*;
+import Controlador.AsignadorPlanes;
 import java.sql.*;
 import java.util.*;
 
@@ -82,24 +82,13 @@ public class ClienteDAO {
     public List<PlanPostPago> listarPlanes(String cedula) {
         List<PlanPostPago> lista = new ArrayList<>();
         PlanPostPago p;
-        ControladorPlanes cp = new ControladorPlanes();
+        AsignadorPlanes ap = new AsignadorPlanes();
         String sql = "SELECT FROM Planes where ci/pasap = ?";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 String tipo = rs.getString("nombrePlan");
-                if (tipo.equals("Megas")) {
-                    p = new Megas();
-                    p.setNombrePlan(rs.getString("nombrePlan"));
-                    p.setCategoriaPlan("categoriaPlan");
-
-                } else if (tipo.equals("Minutos")) {
-                    p = new Minutos();
-                } else if (tipo.equals("MinutosMegas")) {
-                    p = new MinutosMegas();
-                } else {
-                    p = new MinutosMegasEconomico();
-                }
-
+                String plan = rs.getString("categoriaPlan");
+                p = ap.Asignar(tipo, plan);
                 lista.add(p);
             }
             ps.executeQuery();

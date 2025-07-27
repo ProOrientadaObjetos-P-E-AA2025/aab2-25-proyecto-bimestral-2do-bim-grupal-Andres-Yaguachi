@@ -22,7 +22,7 @@ public abstract class PlanPostPago {
         this.nombrePlan = nombrePlan;
     }
 
-    public double pagoMensual() {
+    public double getpagoMensual() {
         return pagoMensual;
     }
 

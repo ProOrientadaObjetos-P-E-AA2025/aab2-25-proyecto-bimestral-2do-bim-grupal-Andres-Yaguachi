@@ -1,4 +1,4 @@
-package controlador;
+package Controlador;
 
 import Modelo.Cliente;
 import Modelo.Factura;

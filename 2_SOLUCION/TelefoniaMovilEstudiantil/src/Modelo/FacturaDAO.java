@@ -4,20 +4,19 @@ import Util.ConexionSQLite;
 import java.sql.*;
 import java.util.*;
 
-public class FacturasDAO {
+public class FacturaDAO {
 
-    public void insertar(Estudiante e) {
-        String sql = "INSERT INTO Becas (nombres, apellidos, cedula, carrera, semestreAplicar, tipoBeca, mensualBeca, porcentajeBeca) VALUES (?,?,?,?,?,?,?,?)";
+    public void insertar(Factura f) {
+        String sql = "INSERT INTO Facturas (ci/pasp, plan, costo, subtotal, iva, total, numFactura) VALUES (?,?,?,?,?,?,?)";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, e.getNombres());
+            ps.setString(1, f.);
             ps.setString(2, e.getApellidos());
             ps.setString(3, e.getCedula());
             ps.setString(4, e.getCarrera());
             ps.setString(5, e.getSemestreApliacar());
             ps.setString(6, e.getBeca().getTipoBeca());
             ps.setDouble(7, e.getBeca().getMontoBeca());
-            ps.setDouble(8, e.getBeca().getPorcentajeBeca());
             ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("Error al insertar...." + ex.getMessage());
@@ -25,7 +24,7 @@ public class FacturasDAO {
             System.out.println("Error : " + ed.getMessage());
         }
     }
-
+/*
     public void eliminar(String cedula) {
         String sql = "DELETE FROM Becas where cedula = ?";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -77,5 +76,5 @@ public class FacturasDAO {
             System.out.println("Error al Listar...." + ex.getMessage());
         }
         return lista;
-    }
+    }*/
 }
