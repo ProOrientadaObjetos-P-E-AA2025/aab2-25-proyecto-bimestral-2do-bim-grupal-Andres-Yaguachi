@@ -105,23 +105,23 @@ public class AsignadorPlanes {
         mme.setNombrePlan("MinutosMegasEconomico");
         switch (categoria) {
             case "Economica" -> {
-                mme.setGigas(5);
+                mme.setGigas(4);
                 mme.setCostGiga(0.81);
-                mme.setMinutos(40);
+                mme.setMinutos(30);
                 mme.setCostoMin(0.051);
                 mme.setPorcDesc(10);
             }
             case "Balanceada" -> {
-                mme.setGigas(10);
+                mme.setGigas(8);
                 mme.setCostGiga(0.99);
-                mme.setMinutos(50);
+                mme.setMinutos(40);
                 mme.setCostoMin(0.045);
                 mme.setPorcDesc(12);
             }
             case "Premium" -> {
-                mme.setGigas(20);
+                mme.setGigas(16);
                 mme.setCostGiga(0.9);
-                mme.setMinutos(80);
+                mme.setMinutos(60);
                 mme.setCostoMin(0.05);
                 mme.setPorcDesc(15);
             }
