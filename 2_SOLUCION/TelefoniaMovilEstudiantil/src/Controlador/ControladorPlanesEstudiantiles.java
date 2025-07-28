@@ -1,64 +1,104 @@
 package Controlador;
 
-import Modelo.Cliente;
-import Modelo.Factura;
-import Modelo.PlanPostPago;
+import Vista.*;
+import Modelo.*;
+import java.util.*;
 
 public class ControladorPlanesEstudiantiles {
 
-    Cliente persona;
-    Factura factura;
+    Cliente est;
+    FacturaDAO fdao;
+    ClienteDAO cdao;
+    PlanesDAO pdao;
+    VistaMensajesUsuario vmu;
 
     public ControladorPlanesEstudiantiles() {
-        factura = null;
+        cdao = new ClienteDAO();
+        fdao = new FacturaDAO();
+        pdao = new PlanesDAO();
+        vmu = new VistaMensajesUsuario();
     }
 
-    public void nuevoUsuario() {
-        /*
-        //comprobar que en la base de datos no este este id;        
-        if (!bd.buscar(persona.ci_pas)) {
-            persona = new Cliente();
-        }else {
-            //esta persona ya existe
-        }*/
+    public void nuevoEstudiante(Cliente c, List<PlanPostPago> planes) {
+        if (!cdao.Buscar(c.getCedula())) {
+            est = c;
+            est.setPlanesActivos(planes.size());
+            est.setPlan(planes);
+            cdao.insertar(est);
+            if (planes.size() == 2) {
+                pdao.insertar(planes.get(0), est.getCedula());
+                pdao.insertar(planes.get(1), est.getCedula());
+            } else {
+                pdao.insertar(planes.get(0), est.getCedula());
+            }
+            vmu.informacion("Estudiante Agregado Correctamente");
 
-    }
-
-    public void nuevoPlan(PlanPostPago ppp) {
-        //llamara a base de datos y instanciar el objeto persona
-        //persona = bd.persona();
-
-        /*verificar si tiene ya un plan si no 
-        if(persona.plan[0] != null && persona.plan[1] != null){
-            //System.out.println("Esta persona ya tiene la cantidad maxima de planes, elimine uno para agregar uno nuevo");
         } else {
-            for (PlanPostPago plan : persona.plan) {
-                if (plan == null) {
-                    //bd.create();
-                    persona.plan[] = ppp;
-                }
-            }*/
+            vmu.advertencias("Ya existe un Estudiante registrado con esa cedula");
+        }
+
     }
 
-    public void eliminarPlan(String nombrePlan) {
-        /*
-        if (persona.plan[0] == null && persona.plan[1] == null) {
-            System.out.println("No se puede eliminar ya que esta persona no tiene planes..");
+    public void nuevoPlan(PlanPostPago ppp, String cedula) {
+        List<PlanPostPago> planuevo = new ArrayList<>();
+        est = cdao.estudiante(cedula);
+        if (est.getPlanesActivos() == 2) {
+            vmu.error("Esta persona ya tiene la cantidad maxima de planes, elimine uno para agregar uno nuevo");
         } else {
-            for (PlanPostPago plan : persona.plan) {
-                if (plan.nombrePlan.equals(nombrePlan)) {
-                    //bd.delete();
+            planuevo = est.getPlan();
+            planuevo.add(ppp);
+            est.setPlan(planuevo);
+            pdao.insertar(ppp, cedula);
+            vmu.informacion("Plan Asignado con exito");
+        }
+    }
+
+    public void eliminarPlan(String nombrePlan, String cedula) {
+        est = cdao.estudiante(cedula);
+        if (est.getPlanesActivos() == 0) {
+            vmu.advertencias("No se puede eliminar ya que esta persona no tiene planes..");
+        } else {
+            for (int i = 0; i < 2; i++) {
+                if (est.getPlan().get(i).getNombrePlan().equals(nombrePlan)) {
+                    pdao.eliminar(cedula, nombrePlan);
+                    fdao.eliminar(cedula, nombrePlan);
+                    vmu.informacion("Estudiante Eliminado con exito");
+                } else {
+                    vmu.advertencias("El estudiante no cuenta con nigun plan con ese nombre");
                 }
             }
-        }*/
+        }
 
     }
 
-    public void reemplazarPlan() {
+    public void reemplazarPlan(String cedula, String nomPElim, PlanPostPago ppp) {
+        if (cdao.Buscar(cedula)) {
+            eliminarPlan(nomPElim, cedula);
+            nuevoPlan(ppp, cedula);
+        } else {
+            vmu.advertencias("No existe un Estudiante registrado con esa cedula");
+        }
+    }
+
+    public void mostrarEstudiantes() {
 
     }
 
-    public void generarFactura() {
+    public void mostrarPlanesdEstudiante() {
+
+    }
+
+    public void actualizarEstudiante(String cedula, Cliente c) {
+        if (cdao.Buscar(c.getCedula())) {
+            est = cdao.estudiante(cedula);
+            c.setCedula(est.getCedula());
+            cdao.actualizar(c);
+        } else {
+            System.out.println("Este Estudiante no existe");
+        }
+    }
+
+    public void mostrarFactura() {
         double subtotal;
         /*
         if (persona.planesActivos == 2) {

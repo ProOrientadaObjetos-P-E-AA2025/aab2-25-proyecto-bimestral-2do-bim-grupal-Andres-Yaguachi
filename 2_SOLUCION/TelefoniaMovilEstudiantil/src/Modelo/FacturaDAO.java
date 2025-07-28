@@ -7,16 +7,17 @@ import java.util.*;
 public class FacturaDAO {
 
     public void insertar(Factura f) {
-        String sql = "INSERT INTO Facturas (ci/pasp, plan, costo, subtotal, iva, total, numFactura) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Facturas (cedula, plan, categoriaPlan, costo, subtotal, iva, total, numFactura) VALUES (?,?,?,?,?,?,?,?)";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, f.);
-            ps.setString(2, e.getApellidos());
-            ps.setString(3, e.getCedula());
-            ps.setString(4, e.getCarrera());
-            ps.setString(5, e.getSemestreApliacar());
-            ps.setString(6, e.getBeca().getTipoBeca());
-            ps.setDouble(7, e.getBeca().getMontoBeca());
+            ps.setString(1, f.getCedula());
+            ps.setString(2, f.getPlan());
+            ps.setString(3, f.getCategoriaPlan());
+            ps.setDouble(4, f.getSubtotal());
+            ps.setDouble(5, f.getSubtotal());
+            ps.setDouble(6, f.getIva());
+            ps.setDouble(7, f.getTotal());
+            ps.setLong(8, f.getNumFactura());
             ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("Error al insertar...." + ex.getMessage());
@@ -24,57 +25,39 @@ public class FacturaDAO {
             System.out.println("Error : " + ed.getMessage());
         }
     }
-/*
-    public void eliminar(String cedula) {
-        String sql = "DELETE FROM Becas where cedula = ?";
+
+    public void eliminar(String cedula, String plan) {
+        String sql = "DELETE FROM Facturas WHERE cedula = ? AND plan = ?";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cedula);
+            ps.setString(2, plan);
             ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("Error al eliminar " + ex.getMessage());
         }
     }
 
-    public void actualizar(Estudiante e) {
-        String sql = "UPDATE Becas set "
-                + "nombres = ? , apellidos = ?, carrera = ?, semestreAplicar = ? , tipoBeca = ?, mensualBeca = ?, porcentajeBeca = ? WHERE cedula = ?";
-        try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, e.getNombres());
-            ps.setString(2, e.getApellidos());
-            ps.setString(3, e.getCarrera());
-            ps.setString(4, e.getSemestreApliacar());
-            ps.setString(5, e.getBeca().getTipoBeca());
-            ps.setDouble(6, e.getBeca().getMontoBeca());
-            ps.setDouble(7, e.getBeca().getPorcentajeBeca());
-            ps.setString(8, e.getCedula());
-            ps.executeUpdate();
-        } catch (SQLException ex) {
-            System.out.println("Error al actualizar...." + ex.getMessage());
-        }
-    }
-
-    public List<Estudiante> listar() {
-        List<Estudiante> lista = new ArrayList<>();
-        String sql = "SELECT * FROM Becas";
+    public List<Factura> listar(String cedula) {
+        List<Factura> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Facturas WHERE ci/pasap = ?";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            ps.setString(1, cedula);
             while (rs.next()) {
-                Beca b = new Beca();
-                Estudiante e = new Estudiante();
-                e.setNombres(rs.getString("nombres"));
-                e.setApellidos(rs.getString("apellidos"));
-                e.setCedula(rs.getString("cedula"));
-                e.setCarrera(rs.getString("carrera"));
-                e.setSemestreApliacar(rs.getString("semestreAplicar"));
-                b.setTipoBeca(rs.getString("tipoBeca"));
-                b.setMontoBeca(rs.getDouble("mensualBeca"));
-                b.setPorcentajeBeca(rs.getDouble("porcentajeBeca"));
-                e.setBeca(b);
-                lista.add(e);
+                Factura f = new Factura();
+                f.setCedula(rs.getString("cedula"));
+                f.setPlan(rs.getString("plan"));
+                f.setCategoriaPlan(rs.getString("categoriaPlan"));
+                f.setSubtotal(rs.getDouble("subtotal"));
+                f.setIva(rs.getDouble("iva"));
+                f.setTotal(rs.getDouble("total"));
+                f.setNumFactura(rs.getLong("numFactura"));
+                lista.add(f);
             }
             ps.executeQuery();
         } catch (SQLException ex) {
             System.out.println("Error al Listar...." + ex.getMessage());
         }
         return lista;
-    }*/
+
+    }
 }

@@ -7,7 +7,7 @@ public class Cliente {
 
     protected String nombre;
     protected String apellido;
-    protected String ci_pas;
+    protected String cedula;
     protected String ciudad;
     protected String email;
     protected long numCelular;
@@ -36,12 +36,12 @@ public class Cliente {
         this.apellido = apellido;
     }
 
-    public String getCi_pas() {
-        return ci_pas;
+    public String getCedula() {
+        return cedula;
     }
 
-    public void setCi_pas(String ci_pas) {
-        this.ci_pas = ci_pas;
+    public void setCedula(String ci_pas) {
+        this.cedula = ci_pas;
     }
 
     public String getCiudad() {

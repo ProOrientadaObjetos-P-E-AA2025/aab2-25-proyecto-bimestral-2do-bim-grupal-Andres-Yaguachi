@@ -52,11 +52,19 @@ public class Factura {
         return subtotal;
     }
 
-    public void setSubtotal() {
+    public void calcularSubtotal() {
         AsignadorPlanes ap = new AsignadorPlanes();
         PlanPostPago p;
         p = ap.Asignar(plan, categoriaPlan);
         subtotal = p.getpagoMensual();
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
     }
 
     public double getTotal() {
