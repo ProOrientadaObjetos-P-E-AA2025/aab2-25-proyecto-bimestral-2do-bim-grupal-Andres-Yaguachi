@@ -10,9 +10,11 @@ public class ControladorVista {
 
     ControladorPlanesEstudiantiles cpe;
     VistaPrincipal vp;
+    VistaMensajesUsuario vmu;
 
     public ControladorVista() {
         cpe = new ControladorPlanesEstudiantiles();
+        vmu = new VistaMensajesUsuario();
     }
 
     public void setVp(VistaPrincipal vp) {
@@ -31,12 +33,12 @@ public class ControladorVista {
         cpe.eliminarEstudiante(cedula);
     }
 
-    public void eliminarPlan(String nombrePlan, String cedula) {
-        cpe.eliminarPlan(nombrePlan, cedula);
+    public void eliminarPlan(String nombrePlan, String catPlan, String cedula) {
+        cpe.eliminarPlan(nombrePlan, catPlan, cedula);
     }
 
-    public void reemplazarPlan(String cedula, String nomPElim, PlanPostPago ppp) {
-        cpe.reemplazarPlan(cedula, nomPElim, ppp);
+    public void reemplazarPlan(String cedula, String nomPElim, String catPlan, PlanPostPago ppp) {
+        cpe.reemplazarPlan(cedula, nomPElim, catPlan, ppp);
     }
 
     public void actualizarEstudiante(String cedula, Cliente c) {
@@ -50,10 +52,24 @@ public class ControladorVista {
     }
 
     public void mostrarFacturasIndividuales(String cedula) {
+
         List<Factura> facturas = cpe.mostrarFacturaIndividual(cedula);
         Cliente est = cpe.estudiante(cedula);
-        VistaFacturaPersona vfp = new VistaFacturaPersona(vp, facturas.get(0), est);
-        mostrarComoDialogo(vp, vfp, "Facturas Individuales");
+        if (est == null) {
+            vmu.error("Estudiante no encontrado con la cédula proporcionada.");
+            return;
+        }
+
+        if (facturas != null && !facturas.isEmpty()) {
+            for (Factura factura : facturas) {
+                VistaFacturaPersona vfp = new VistaFacturaPersona(vp, factura, est);
+                mostrarComoDialogo(vp, vfp, "Factura para " + est.getNombre());
+            }
+
+        } else {
+            vmu.advertencias("No hay facturas para este estudiante.");
+        }
+
     }
 
     public void mostrarEstudiantes() {
@@ -65,7 +81,7 @@ public class ControladorVista {
 
     public void mostrarPlanes(String cedula) {
         List<PlanPostPago> planes = cpe.listarPlanes(cedula);
-        Cliente es = cpe.cdao.estudiante(cedula);
+        Cliente es = cpe.estudiante(cedula);
         es.setPlan(planes);
         VistaPlanesPEstudiantes vppe = new VistaPlanesPEstudiantes(vp, es, es.getPlan());
         mostrarComoDialogo(vp, vppe, "Listado de Planes");

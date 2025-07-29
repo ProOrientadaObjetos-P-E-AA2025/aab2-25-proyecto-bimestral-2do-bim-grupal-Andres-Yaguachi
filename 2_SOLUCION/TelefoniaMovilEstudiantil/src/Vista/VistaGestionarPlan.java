@@ -50,7 +50,7 @@ public class VistaGestionarPlan extends JPanel {
                 vmu.error("Ingreso cancelado.");
                 return;
             }
-            cv.eliminarPlan(p.getNombrePlan(), cedula);
+            cv.eliminarPlan(p.getNombrePlan(), p.getCategoriaPlan(), cedula);
         });
 
         remplazarPlan.addActionListener(e -> {
@@ -85,7 +85,7 @@ public class VistaGestionarPlan extends JPanel {
                 return;
             }
             String viejo = v.getNombrePlan();
-            cv.reemplazarPlan(cedula, viejo, p);
+            cv.reemplazarPlan(cedula, viejo, v.getCategoriaPlan(), p);
         });
         listarPlan.addActionListener(e -> {
             VistaIngresoCedula ci = new VistaIngresoCedula(base);

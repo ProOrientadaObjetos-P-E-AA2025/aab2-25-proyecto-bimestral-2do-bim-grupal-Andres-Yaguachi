@@ -18,7 +18,7 @@ public class VistaGestionarEstudiante extends JPanel {
         JLabel titulo = new JLabel("Gestionar Estudiantes", SwingConstants.CENTER);
         JButton insertarEstudiante = new JButton("Insertar Estudiante");
         JButton eliminarEstudiante = new JButton("Eliminar Estudiante");
-        JButton actualizarEstudiante = new JButton("Actualizaar Estudiante");
+        JButton actualizarEstudiante = new JButton("Actualizar Estudiante");
         JButton listarEstudiantes = new JButton("Listar Estudiantes");
         JButton btnVolver = new JButton("Volver");
 
@@ -81,7 +81,7 @@ public class VistaGestionarEstudiante extends JPanel {
         });
         btnVolver.addActionListener(e -> base.cambiarVista("MENU"));
 
-        JPanel botones = new JPanel(new GridLayout(4, 1, 10, 10));
+        JPanel botones = new JPanel(new GridLayout(4, 1, 6, 6));
         botones.add(insertarEstudiante);
         botones.add(eliminarEstudiante);
         botones.add(actualizarEstudiante);

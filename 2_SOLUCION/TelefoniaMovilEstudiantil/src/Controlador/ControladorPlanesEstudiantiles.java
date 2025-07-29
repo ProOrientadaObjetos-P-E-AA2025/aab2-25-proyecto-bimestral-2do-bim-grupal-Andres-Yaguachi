@@ -6,7 +6,6 @@ import java.util.*;
 
 public class ControladorPlanesEstudiantiles {
 
-    Cliente est;
     FacturaDAO fdao;
     ClienteDAO cdao;
     PlanesDAO pdao;
@@ -17,11 +16,12 @@ public class ControladorPlanesEstudiantiles {
         fdao = new FacturaDAO();
         pdao = new PlanesDAO();
         vmu = new VistaMensajesUsuario();
+
     }
 
     public void nuevoEstudiante(Cliente c, List<PlanPostPago> planes) {
+        Cliente est;
         double pMen = 0;
-        Factura f = new Factura();
         if (!cdao.Buscar(c.getCedula())) {
             est = c;
             est.setPlanesActivos(planes.size());
@@ -30,37 +30,19 @@ public class ControladorPlanesEstudiantiles {
                 pMen += planes.get(i).getpagoMensual();
             }
             est.setPagoMensual(pMen);
-
-            if (planes.size() == 2) {
-                pdao.insertar(planes.get(0), est.getCedula());
+            for (PlanPostPago plan : planes) {
+                Factura f = new Factura();
+                pdao.insertar(plan, est.getCedula());
                 f.setCedula(est.getCedula());
-                f.setPlan(planes.get(0).getNombrePlan());
-                f.setCategoriaPlan(planes.get(0).getCategoriaPlan());
-                f.setSubtotal(planes.get(0).getpagoMensual());
-                f.calcularIva();
-                f.calculartotal();
-                f.setNumFactura(fdao.numeroFactura());
-                fdao.insertar(f);
-                pdao.insertar(planes.get(1), est.getCedula());
-                f.setCedula(est.getCedula());
-                f.setPlan(planes.get(1).getNombrePlan());
-                f.setCategoriaPlan(planes.get(1).getCategoriaPlan());
-                f.setSubtotal(planes.get(1).getpagoMensual());
-                f.calcularIva();
-                f.calculartotal();
-                f.setNumFactura(fdao.numeroFactura());
-                fdao.insertar(f);
-            } else {
-                pdao.insertar(planes.get(0), est.getCedula());
-                f.setCedula(est.getCedula());
-                f.setPlan(planes.get(0).getNombrePlan());
-                f.setCategoriaPlan(planes.get(0).getCategoriaPlan());
-                f.setSubtotal(planes.get(0).getpagoMensual());
+                f.setPlan(plan.getNombrePlan());
+                f.setCategoriaPlan(plan.getCategoriaPlan());
+                f.setSubtotal(plan.getpagoMensual());
                 f.calcularIva();
                 f.calculartotal();
                 f.setNumFactura(fdao.numeroFactura());
                 fdao.insertar(f);
             }
+
             cdao.insertar(est);
             vmu.informacion("Estudiante Agregado Correctamente");
 
@@ -71,6 +53,7 @@ public class ControladorPlanesEstudiantiles {
     }
 
     public void nuevoPlan(PlanPostPago ppp, String cedula) {
+        Cliente est;
         Factura f = new Factura();
         List<PlanPostPago> planuevo = new ArrayList<>();
         est = cdao.estudiante(cedula);
@@ -100,39 +83,47 @@ public class ControladorPlanesEstudiantiles {
         }
     }
 
-    public void eliminarPlan(String nombrePlan, String cedula) {
+    public void eliminarPlan(String nombrePlan, String catPlan, String cedula) {
+        Cliente est;
         est = cdao.estudiante(cedula);
         est.setPlan(pdao.listarPlanes(cedula));
+        est.setPlanesActivos(est.getPlan().size());
         if (est.getPlanesActivos() == 0) {
             vmu.advertencias("No se puede eliminar ya que esta persona no tiene planes..");
         } else {
-            for (int i = 0; i < 2; i++) {
-                if (est.getPlan().get(i).getNombrePlan().equals(nombrePlan)) {
-                    pdao.eliminar(cedula, nombrePlan);
+            boolean encontrado = false;
+            for (PlanPostPago plan : est.getPlan()) {
+                if (plan.getNombrePlan().equals(nombrePlan)) {
+                    pdao.eliminar(cedula, nombrePlan, catPlan);
                     fdao.eliminar(cedula, nombrePlan);
                     cdao.actualizar(est);
-                    vmu.informacion("Plan de Estudiante Eliminado con exito");
-                } else {
-                    vmu.advertencias("El estudiante no cuenta con nigun plan con ese nombre");
+                    vmu.informacion("Plan eliminado correctamente.");
+                    encontrado = true;
+                    break;
                 }
             }
+            if (!encontrado) {
+                vmu.advertencias("El estudiante no cuenta con ningún plan con ese nombre.");
+            }
+
         }
 
     }
 
     public void eliminarEstudiante(String cedula) {
+        Cliente est;
         est = cdao.estudiante(cedula);
         est.setPlan(pdao.listarPlanes(cedula));
         if (est != null) {
             if (!est.getPlan().isEmpty()) {
                 if (est.getPlan().size() == 2) {
                     fdao.eliminar(cedula, est.getPlan().get(0).getNombrePlan());
-                    eliminarPlan(est.getPlan().get(0).getNombrePlan(), est.getCedula());
+                    eliminarPlan(est.getPlan().get(0).getNombrePlan(), est.getPlan().get(0).getCategoriaPlan(), est.getCedula());
                     fdao.eliminar(cedula, est.getPlan().get(1).getNombrePlan());
-                    eliminarPlan(est.getPlan().get(1).getNombrePlan(), est.getCedula());
+                    eliminarPlan(est.getPlan().get(1).getNombrePlan(), est.getPlan().get(1).getCategoriaPlan(), est.getCedula());
                 } else {
                     fdao.eliminar(cedula, est.getPlan().get(0).getNombrePlan());
-                    eliminarPlan(est.getPlan().get(0).getNombrePlan(), est.getCedula());
+                    eliminarPlan(est.getPlan().get(0).getNombrePlan(), est.getPlan().get(0).getCategoriaPlan(), est.getCedula());
                 }
                 cdao.eliminar(cedula);
             } else {
@@ -144,9 +135,9 @@ public class ControladorPlanesEstudiantiles {
 
     }
 
-    public void reemplazarPlan(String cedula, String nomPElim, PlanPostPago ppp) {
+    public void reemplazarPlan(String cedula, String nomPElim, String catPlan, PlanPostPago ppp) {
         if (cdao.Buscar(cedula)) {
-            eliminarPlan(nomPElim, cedula);
+            eliminarPlan(nomPElim, cedula, catPlan);
             nuevoPlan(ppp, cedula);
         } else {
             vmu.advertencias("No existe un Estudiante registrado con esa cedula");
@@ -154,6 +145,7 @@ public class ControladorPlanesEstudiantiles {
     }
 
     public void actualizarEstudiante(String cedula, Cliente c) {
+        Cliente est;
         if (cdao.Buscar(c.getCedula())) {
             est = cdao.estudiante(cedula);
             c.setCedula(est.getCedula());
@@ -180,6 +172,7 @@ public class ControladorPlanesEstudiantiles {
     }
 
     public Cliente estudiante(String cedula) {
+        Cliente est;
         est = cdao.estudiante(cedula);
         return est;
     }

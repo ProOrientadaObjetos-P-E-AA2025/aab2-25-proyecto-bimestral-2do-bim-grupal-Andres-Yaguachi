@@ -10,7 +10,7 @@ public class VistaIngresoCedula extends JDialog {
     private String cedulaValidada = null;
 
     public VistaIngresoCedula(Frame parent) {
-        super(parent, "Ingreso de cédula", true); // Modal
+        super(parent, "Ingreso de cédula", true);
         setLayout(new BorderLayout());
         vmu = new VistaMensajesUsuario();
 

@@ -19,7 +19,7 @@ public class VistaIngresoPlanes extends JPanel {
         vmu = new VistaMensajesUsuario();
 
         tipoPlan = new JComboBox<>(new String[]{
-            "Plan Megas", "Plan Minutos", "Plan MinutosMegas", "Plan MinutosMegasEconomico"
+            "Megas", "Minutos", "MinutosMegas", "MinutosMegasEconomico"
         });
         tipoPlan.setPreferredSize(new Dimension(200, 30));
 

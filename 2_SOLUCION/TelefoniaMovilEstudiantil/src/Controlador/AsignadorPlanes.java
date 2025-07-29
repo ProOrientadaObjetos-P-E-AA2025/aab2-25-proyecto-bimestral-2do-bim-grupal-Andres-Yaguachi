@@ -16,6 +16,9 @@ public class AsignadorPlanes {
             case "MinutosMegas":
                 p = AsignadorMinutosMegas(categoria);
                 break;
+            case "MinutosMegasEconomico":
+                p = AsignadorMinutosMegasEconomico(categoria);
+                break;
             default:
                 p = AsignadorMinutosMegasEconomico(categoria);
                 break;

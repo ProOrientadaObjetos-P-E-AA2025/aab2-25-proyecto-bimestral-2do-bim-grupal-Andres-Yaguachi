@@ -27,11 +27,12 @@ public class PlanesDAO {
         }
     }
 
-    public void eliminar(String cedula, String nombrePlan) {
-        String sql = "DELETE FROM Planes WHERE cedula = ? AND nombrePlan = ?";
+    public void eliminar(String cedula, String nombrePlan, String categoriaPlan) {
+        String sql = "DELETE FROM Planes WHERE cedula = ? AND nombrePlan = ?AND categoriaPlan = ?";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cedula);
             ps.setString(2, nombrePlan);
+            ps.setString(3, categoriaPlan);
             ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println("Error al eliminar " + ex.getMessage());
@@ -40,24 +41,22 @@ public class PlanesDAO {
 
     public List<PlanPostPago> listarPlanes(String cedula) {
         List<PlanPostPago> lista = new ArrayList<>();
-        PlanPostPago p;
-        AsignadorPlanes ap = new AsignadorPlanes();
         String sql = "SELECT * FROM Planes WHERE cedula = ?";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cedula);
             try (ResultSet rs = ps.executeQuery()) {
+                AsignadorPlanes ap = new AsignadorPlanes();
                 while (rs.next()) {
                     String tipo = rs.getString("nombrePlan");
-                    String plan = rs.getString("categoriaPlan");
-                    p = ap.Asignar(tipo, plan);
-                    lista.add(p);
+                    String planCategoria = rs.getString("categoriaPlan");
+                    PlanPostPago p = ap.Asignar(tipo, planCategoria);
+                    if (p != null) {
+                        lista.add(p);
+                    }
                 }
-            } catch (SQLException es) {
-                System.out.println("Error" + es.getMessage());
             }
-
         } catch (SQLException ex) {
-            System.out.println("Error al Listar...." + ex.getMessage());
+            System.out.println("Error al Listar planes...." + ex.getMessage());
         }
         return lista;
     }

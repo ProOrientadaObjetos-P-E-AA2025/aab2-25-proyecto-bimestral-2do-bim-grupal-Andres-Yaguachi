@@ -85,36 +85,39 @@ public class ClienteDAO {
     }
 
     public Boolean Buscar(String cedula) {
-        String sql = "SELECT * FROM Estudiantes WHERE cedula = ?";
-        try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        String sql = "SELECT cedula FROM Estudiantes WHERE cedula = ?";
+        try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cedula);
-            return rs.next();
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
         } catch (SQLException ex) {
-            System.out.println("Error al Listar...." + ex.getMessage());
+            System.out.println("Error al buscar cliente por cedula...." + ex.getMessage());
+            return false;
         }
-        return false;
     }
 
     public Cliente estudiante(String cedula) {
-        Cliente e = new Cliente();
+        Cliente e = null;
         String sql = "SELECT * FROM Estudiantes WHERE cedula = ?";
-        try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cedula);
-            while (rs.next()) {
-                e.setNombre(rs.getString("nombre"));
-                e.setApellido(rs.getString("apellido"));
-                e.setCedula(rs.getString("cedula"));
-                e.setCiudad(rs.getString("ciudad"));
-                e.setEmail(rs.getString("email"));
-                e.setNumCelular(rs.getLong("numCelular"));
-                e.setPlanesActivos(rs.getInt("planesActivos"));
-                e.setPagoMensual(rs.getDouble("pagoMensual"));
-                e.setPlan(pd.listarPlanes(e.getCedula()));
-
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    e = new Cliente();
+                    e.setNombre(rs.getString("nombre"));
+                    e.setApellido(rs.getString("apellido"));
+                    e.setCedula(rs.getString("cedula"));
+                    e.setCiudad(rs.getString("ciudad"));
+                    e.setEmail(rs.getString("email"));
+                    e.setNumCelular(rs.getLong("numCelular"));
+                    e.setPlanesActivos(rs.getInt("planesActivos"));
+                    e.setPagoMensual(rs.getDouble("pagoMensual"));
+                    e.setPlan(pd.listarPlanes(e.getCedula()));
+                }
             }
-            ps.executeQuery();
         } catch (SQLException ex) {
-            System.out.println("Error al Listar...." + ex.getMessage());
+            System.out.println("Error al obtener estudiante por cedula...." + ex.getMessage());
         }
         return e;
     }
