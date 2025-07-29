@@ -1,12 +1,13 @@
 package Vista;
 
+import Modelo.*;
 import java.awt.*;
 import javax.swing.*;
 
 public class VistaIngresoEstudiantes extends JPanel {
 
     private VistaMensajesUsuario vmu;
-
+    private Cliente estu;
     private JTextField nombre;
     private JTextField cedula;
     private JTextField apellido;
@@ -54,7 +55,7 @@ public class VistaIngresoEstudiantes extends JPanel {
         String apl = apellido.getText();
         String city = ciudad.getText();
         String eml = email.getText();
-        String numC = numeroCelular.getText().trim();
+        Long numC = Long.parseLong(numeroCelular.getText().trim());
         if (nom.isEmpty() || ci.isEmpty()) {
             vmu.advertencias("Nombre y cedula son campos obligatorios...");
             return;
@@ -63,11 +64,22 @@ public class VistaIngresoEstudiantes extends JPanel {
             vmu.error("La cedula solo admite valores numericos");
             return;
         }
-        if (!numC.isEmpty() && !numC.matches("\\d{9}")) {
-            vmu.error("Numero Celular invalido: Solo se pueden ingresar 9 numeros");
-            return;
-        }
-        //base.registrarEstudiante();
+
+        setEstudiante(nom, ci, apl, city, eml, numC);
+
+    }
+
+    public void setEstudiante(String nom, String ci, String apl, String city, String eml, Long numC) {
+        estu.setNombre(nom);
+        estu.setCedula(ci);
+        estu.setApellido(apl);
+        estu.setCiudad(city);
+        estu.setEmail(eml);
+        estu.setNumCelular(numC);
+    }
+
+    public Cliente getEstudiante() {
+        return estu;
     }
 
 }

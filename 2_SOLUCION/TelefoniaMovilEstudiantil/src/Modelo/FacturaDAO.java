@@ -37,7 +37,7 @@ public class FacturaDAO {
         }
     }
 
-    public List<Factura> listar(String cedula) {
+    public List<Factura> listarIndividual(String cedula) {
         List<Factura> lista = new ArrayList<>();
         String sql = "SELECT * FROM Facturas WHERE ci/pasap = ?";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -59,5 +59,42 @@ public class FacturaDAO {
         }
         return lista;
 
+    }
+
+    public List<Factura> listarTodas() {
+        List<Factura> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Facturas";
+        try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Factura f = new Factura();
+                f.setCedula(rs.getString("cedula"));
+                f.setPlan(rs.getString("plan"));
+                f.setCategoriaPlan(rs.getString("categoriaPlan"));
+                f.setSubtotal(rs.getDouble("subtotal"));
+                f.setIva(rs.getDouble("iva"));
+                f.setTotal(rs.getDouble("total"));
+                f.setNumFactura(rs.getLong("numFactura"));
+                lista.add(f);
+            }
+            ps.executeQuery();
+        } catch (SQLException ex) {
+            System.out.println("Error al Listar...." + ex.getMessage());
+        }
+        return lista;
+
+    }
+
+    public int numeroFactura() {
+        int i = 0;
+        String sql = "SELECT * FROM Facturas";
+        try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                i++;
+            }
+            ps.executeQuery();
+        } catch (SQLException ex) {
+            System.out.println("Error al Listar...." + ex.getMessage());
+        }
+        return i;
     }
 }

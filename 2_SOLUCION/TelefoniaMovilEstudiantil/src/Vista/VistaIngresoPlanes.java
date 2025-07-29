@@ -1,12 +1,14 @@
 package Vista;
 
+import Modelo.*;
+import Controlador.*;
 import java.awt.*;
 import javax.swing.*;
 
 public class VistaIngresoPlanes extends JPanel {
 
     private VistaMensajesUsuario vmu;
-
+    private PlanPostPago ppp;
     private JComboBox<String> tipoPlan;
     private JComboBox<String> categoriaPlan;
     private JButton informacion;
@@ -33,7 +35,7 @@ public class VistaIngresoPlanes extends JPanel {
                 vmu.advertencias("Seleccione un tipo y categoria de plan.....Datos Incompletos");
                 return;
             }
-            //enviar a controlador para Instanciar
+            setPPP(tipoP, catP);
         });
 
         add(new JLabel("Seleccionar Plan: "));
@@ -42,6 +44,15 @@ public class VistaIngresoPlanes extends JPanel {
         add(categoriaPlan);
         add(new JLabel());
         add(registrar);
+    }
+
+    public void setPPP(String tipo, String Categoria) {
+        AsignadorPlanes ap = new AsignadorPlanes();
+        ppp = ap.Asignar(tipo, Categoria);
+    }
+
+    public PlanPostPago getPPP() {
+        return ppp;
     }
 
     private void mostrarInformacion() {

@@ -75,12 +75,16 @@ public class Factura {
         return iva;
     }
 
+    public void calcularIva() {
+        this.iva = getSubtotal() * 0.15;
+    }
+
     public void setIva(double iva) {
         this.iva = iva;
     }
 
     public void calculartotal() {
-        total = subtotal * ((iva / 100) + 1);
+        total = subtotal + iva;
     }
 
 }

@@ -6,7 +6,7 @@ import javax.swing.*;
 
 public class VistaFacturaPersona extends JPanel {
 
-    public VistaFacturaPersona(Factura factura, Cliente estudiante) {
+    public VistaFacturaPersona(VistaPrincipal base, Factura factura, Cliente estudiante) {
         setLayout(new GridLayout(0, 1, 5, 5));
         add(new JLabel("FACTURA N° " + factura.getNumFactura()));
         add(new JLabel("Cliente: " + estudiante.getNombre() + " " + estudiante.getApellido()));
@@ -20,7 +20,7 @@ public class VistaFacturaPersona extends JPanel {
 
         add(new JLabel("--------------------------------------------"));
         add(new JLabel(String.format("Subtotal: $%.2f", factura.getSubtotal())));
-        add(new JLabel(String.format("IVA (12%%): $%.2f", factura.getIva())));
+        add(new JLabel(String.format("IVA (15%%): $%.2f", factura.getIva())));
         add(new JLabel(String.format("Total a Pagar: $%.2f", factura.getTotal())));
 
     }

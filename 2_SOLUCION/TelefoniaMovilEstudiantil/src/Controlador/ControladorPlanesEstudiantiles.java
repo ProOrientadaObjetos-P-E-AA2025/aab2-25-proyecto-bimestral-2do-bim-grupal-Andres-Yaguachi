@@ -62,12 +62,22 @@ public class ControladorPlanesEstudiantiles {
                 if (est.getPlan().get(i).getNombrePlan().equals(nombrePlan)) {
                     pdao.eliminar(cedula, nombrePlan);
                     fdao.eliminar(cedula, nombrePlan);
-                    vmu.informacion("Estudiante Eliminado con exito");
+                    vmu.informacion("Plan de Estudiante Eliminado con exito");
                 } else {
                     vmu.advertencias("El estudiante no cuenta con nigun plan con ese nombre");
                 }
             }
         }
+
+    }
+
+    public void eliminarEstudiante(String cedula) {
+        est = cdao.estudiante(cedula);
+        for (int i = 0; i < 2; i++) {
+            fdao.eliminar(cedula, est.getPlan().get(i).getNombrePlan());
+            eliminarPlan(est.getPlan().get(i).getNombrePlan(), est.getCedula());
+        }
+        cdao.eliminar(cedula);
 
     }
 
@@ -80,40 +90,34 @@ public class ControladorPlanesEstudiantiles {
         }
     }
 
-    public void mostrarEstudiantes() {
-
-    }
-
-    public void mostrarPlanesdEstudiante() {
-
-    }
-
     public void actualizarEstudiante(String cedula, Cliente c) {
         if (cdao.Buscar(c.getCedula())) {
             est = cdao.estudiante(cedula);
             c.setCedula(est.getCedula());
             cdao.actualizar(c);
         } else {
-            System.out.println("Este Estudiante no existe");
+            vmu.error("Este Estudiante no existe");
         }
     }
 
-    public void mostrarFactura() {
-        double subtotal;
-        /*
-        if (persona.planesActivos == 2) {
-            subtotal = persona.plan[0].calcularPagoMensaul() + persona.plan[1].calcularPagoMensaul();
-            factura = new Factura(persona, subtotal);
-        } else if (persona.planesActivos == 1) {
-            subtotal = persona.plan[0].calcularPagoMensaul();
-            factura = new Factura(persona, subtotal);
-        } else {
-            System.out.println("Esta persona no tiene planes asociados aun....");
-        }
-        //mostar en pantalla la factura
-        System.out.println(factura);
-        //guardar la factura en base de datos;
-        //bd.guardar(factura);
-         */
+    public List<Cliente> listarEstudiantes() {
+        return cdao.listar();
+    }
+
+    public List<PlanPostPago> listarPlanes(String cedula) {
+        return pdao.listarPlanes(cedula);
+    }
+
+    public List<Factura> mostrarFacturas() {
+        return fdao.listarTodas();
+    }
+
+    public List<Factura> mostrarFacturaIndividual(String cedula) {
+        return fdao.listarIndividual(cedula);
+    }
+
+    public Cliente estudiante(String cedula) {
+        est = cdao.estudiante(cedula);
+        return est;
     }
 }
