@@ -80,11 +80,14 @@ public class ControladorVista {
     }
 
     public void mostrarPlanes(String cedula) {
-        List<PlanPostPago> planes = cpe.listarPlanes(cedula);
         Cliente es = cpe.estudiante(cedula);
+        if (es == null) {
+            return;
+        }
+        List<PlanPostPago> planes = cpe.listarPlanes(cedula);
         es.setPlan(planes);
         VistaPlanesPEstudiantes vppe = new VistaPlanesPEstudiantes(vp, es, es.getPlan());
-        mostrarComoDialogo(vp, vppe, "Listado de Planes");
+        mostrarComoDialogo(vp, vppe, "Listado de Planes para " + es.getNombre());
     }
 
     public <T extends JPanel> T mostrarComoDialogo(Component parent, T panel, String titulo) {

@@ -43,9 +43,10 @@ public class ClienteDAO {
     }
 
     public void actualizar(Cliente e) {
-        String sql = "UPDATE Estudiantes SET "
-                + "nombre = ?, apellido = ?, cedula = ?, ciudad = ?, email = ?, numCelular = ?, planesActivos = ?, pagoMensual = ? WHERE cedula = ?";
+
+        String sql = "UPDATE Estudiantes SET nombre = ?, apellido = ?, ciudad = ?, email = ?, numCelular = ?, planesActivos = ?, pagoMensual = ? WHERE cedula = ?";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, e.getNombre());
             ps.setString(2, e.getApellido());
             ps.setString(3, e.getCiudad());
@@ -54,9 +55,10 @@ public class ClienteDAO {
             ps.setInt(6, e.getPlanesActivos());
             ps.setDouble(7, e.getPagoMensual());
             ps.setString(8, e.getCedula());
+
             ps.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println("Error al actualizar...." + ex.getMessage());
+            System.out.println("Error al actualizar cliente...." + ex.getMessage());
         }
     }
 

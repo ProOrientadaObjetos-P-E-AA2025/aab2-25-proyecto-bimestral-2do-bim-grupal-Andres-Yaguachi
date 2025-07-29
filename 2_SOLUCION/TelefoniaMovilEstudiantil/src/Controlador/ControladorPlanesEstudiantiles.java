@@ -57,7 +57,6 @@ public class ControladorPlanesEstudiantiles {
         Factura f = new Factura();
         List<PlanPostPago> planuevo = new ArrayList<>();
         est = cdao.estudiante(cedula);
-        est.setPlan(pdao.listarPlanes(cedula));
         if (est == null) {
             vmu.error("Esta persona no se encuentra registrada....");
         } else if (est.getPlanesActivos() == 2) {
@@ -65,6 +64,7 @@ public class ControladorPlanesEstudiantiles {
         } else if (repetido(cedula, ppp.getNombrePlan(), ppp.getCategoriaPlan())) {
             vmu.error("Esta persona ya tiene ese metodo, escoga uno distinto");
         } else {
+            est.setPlan(pdao.listarPlanes(cedula));
             est.setPlanesActivos(est.getPlanesActivos() + 1);
             planuevo = est.getPlan();
             planuevo.add(ppp);
@@ -135,24 +135,25 @@ public class ControladorPlanesEstudiantiles {
 
     }
 
-    public void reemplazarPlan(String cedula, String nomPElim, String catPlan, PlanPostPago ppp) {
-        if (cdao.Buscar(cedula)) {
-            eliminarPlan(nomPElim, cedula, catPlan);
-            nuevoPlan(ppp, cedula);
-        } else {
-            vmu.advertencias("No existe un Estudiante registrado con esa cedula");
+    public void reemplazarPlan(String cedula, String nombrePlanAEliminar, String categoriaPlanAEliminar, PlanPostPago nuevoPlan) {
+        Cliente estudiante = cdao.estudiante(cedula);
+        if (estudiante == null) {
+            vmu.advertencias("No existe un estudiante registrado con la cédula: " + cedula);
+            return;
         }
+        eliminarPlan(nombrePlanAEliminar, categoriaPlanAEliminar, cedula);
+        nuevoPlan(nuevoPlan, cedula);
     }
 
-    public void actualizarEstudiante(String cedula, Cliente c) {
-        Cliente est;
-        if (cdao.Buscar(c.getCedula())) {
-            est = cdao.estudiante(cedula);
-            c.setCedula(est.getCedula());
-            cdao.actualizar(c);
-        } else {
-            vmu.error("Este Estudiante no existe");
+    public void actualizarEstudiante(String cedulaParaBuscar, Cliente datosActualizados) {
+        Cliente estudianteExistente = cdao.estudiante(cedulaParaBuscar);
+        if (estudianteExistente == null) {
+            vmu.error("No se encontró un estudiante con la cédula: " + cedulaParaBuscar);
+            return;
         }
+        datosActualizados.setCedula(cedulaParaBuscar);
+        cdao.actualizar(datosActualizados);
+        vmu.informacion("Estudiantes actualizado correctamente.");
     }
 
     public List<Cliente> listarEstudiantes() {
