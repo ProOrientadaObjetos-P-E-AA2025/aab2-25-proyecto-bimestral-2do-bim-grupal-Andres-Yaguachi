@@ -12,7 +12,7 @@ import java.util.List;
 public class PlanesDAO {
 
     public void insertar(PlanPostPago ppp, String cedula) {
-        String sql = "INSERT INTO Planes (nombrePlan, categoriaPlan, cedula, pagoMensaul) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO Planes (nombrePlan, categoriaPlan, cedula, pagoMensual) VALUES (?,?,?,?)";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, ppp.getNombrePlan());
@@ -42,7 +42,7 @@ public class PlanesDAO {
         List<PlanPostPago> lista = new ArrayList<>();
         PlanPostPago p;
         AsignadorPlanes ap = new AsignadorPlanes();
-        String sql = "SELECT * FROM Planes WHERE cedulas = ?";
+        String sql = "SELECT * FROM Planes WHERE cedula = ?";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cedula);
             try (ResultSet rs = ps.executeQuery()) {

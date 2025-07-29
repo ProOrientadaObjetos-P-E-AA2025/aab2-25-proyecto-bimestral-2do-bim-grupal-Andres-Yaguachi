@@ -27,8 +27,8 @@ public class VistaPrincipal extends JFrame {
         contenedor.add(vi, "INICIO");
         contenedor.add(vmp, "MENU");
         contenedor.add(vge, "ESTUDIANTE");
-        contenedor.add(vgf, "PLAN");
-        contenedor.add(vgp, "FACTURA");
+        contenedor.add(vgp, "PLAN");
+        contenedor.add(vgf, "FACTURA");
 
         cambiarVista("INICIO");
         add(contenedor);

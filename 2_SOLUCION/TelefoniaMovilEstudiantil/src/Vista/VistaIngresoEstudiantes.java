@@ -18,7 +18,9 @@ public class VistaIngresoEstudiantes extends JPanel {
     private JButton registrar;
 
     public VistaIngresoEstudiantes(VistaPrincipal base) {
-        setLayout(new GridLayout(5, 2, 10, 10));
+        setPreferredSize(new Dimension(400, 300));
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         vmu = new VistaMensajesUsuario();
         nombre = new JTextField();
@@ -32,21 +34,33 @@ public class VistaIngresoEstudiantes extends JPanel {
 
         registrar.addActionListener(e -> registrarEstudiante());
 
-        add(new JLabel("Nombre: "));
-        add(nombre);
-        add(new JLabel("Cedula: "));
-        add(cedula);
-        add(new JLabel("Apellido: "));
-        add(apellido);
-        add(new JLabel("Ciudad: "));
-        add(ciudad);
-        add(new JLabel("Email: "));
-        add(email);
-        add(new JLabel("Numero Celular: "));
-        add(numeroCelular);
-        add(new JLabel());
-        add(registrar);
+        JPanel formulario = new JPanel();
+        formulario.setLayout(new BoxLayout(formulario, BoxLayout.Y_AXIS));
+        formulario.setPreferredSize(new Dimension(600, 400));
 
+        formulario.add(crearCampo("Nombre:", nombre));
+        formulario.add(crearCampo("Cedula:", cedula));
+        formulario.add(crearCampo("Apellido:", apellido));
+        formulario.add(crearCampo("Ciudad:", ciudad));
+        formulario.add(crearCampo("Email:", email));
+        formulario.add(crearCampo("Numero Celular:", numeroCelular));
+
+        add(formulario, BorderLayout.CENTER);
+
+        JPanel footer = new JPanel();
+        footer.add(registrar);
+        add(footer, BorderLayout.SOUTH);
+
+    }
+
+    private JPanel crearCampo(String etiqueta, JTextField campo) {
+        JPanel fila = new JPanel(new BorderLayout(10, 10));
+        JLabel label = new JLabel(etiqueta);
+        label.setPreferredSize(new Dimension(120, 30));
+        fila.add(label, BorderLayout.WEST);
+        fila.add(campo, BorderLayout.CENTER);
+        fila.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        return fila;
     }
 
     public void registrarEstudiante() {
@@ -64,12 +78,22 @@ public class VistaIngresoEstudiantes extends JPanel {
             vmu.error("La cedula solo admite valores numericos");
             return;
         }
+        if (cedula == null) {
+            vmu.error("Cédula inválida o ingreso cancelado.");
+            return;
+        }
 
         setEstudiante(nom, ci, apl, city, eml, numC);
+
+        Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof JDialog jDialog) {
+            jDialog.dispose();
+        }
 
     }
 
     public void setEstudiante(String nom, String ci, String apl, String city, String eml, Long numC) {
+        estu = new Cliente();
         estu.setNombre(nom);
         estu.setCedula(ci);
         estu.setApellido(apl);

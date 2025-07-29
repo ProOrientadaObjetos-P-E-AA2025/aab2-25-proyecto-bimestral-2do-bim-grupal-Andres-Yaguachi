@@ -66,7 +66,8 @@ public class ControladorVista {
     public void mostrarPlanes(String cedula) {
         List<PlanPostPago> planes = cpe.listarPlanes(cedula);
         Cliente es = cpe.cdao.estudiante(cedula);
-        VistaPlanesPEstudiantes vppe = new VistaPlanesPEstudiantes(vp, es, planes);
+        es.setPlan(planes);
+        VistaPlanesPEstudiantes vppe = new VistaPlanesPEstudiantes(vp, es, es.getPlan());
         mostrarComoDialogo(vp, vppe, "Listado de Planes");
     }
 

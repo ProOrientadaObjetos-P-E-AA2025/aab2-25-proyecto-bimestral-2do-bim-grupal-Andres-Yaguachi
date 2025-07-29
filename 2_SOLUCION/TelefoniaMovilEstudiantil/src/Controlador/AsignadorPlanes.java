@@ -44,6 +44,7 @@ public class AsignadorPlanes {
                 m.setCostGiga(0.9);
             }
         }
+        m.calcularPagoMensaul();
         return m;
     }
 
@@ -69,6 +70,7 @@ public class AsignadorPlanes {
                 m.setMinutosInterNa(60);
             }
         }
+        m.calcularPagoMensaul();
         return m;
     }
 
@@ -96,6 +98,7 @@ public class AsignadorPlanes {
                 mm.setCostoMin(0.04);
             }
         }
+        mm.calcularPagoMensaul();
         return mm;
     }
 
@@ -126,6 +129,7 @@ public class AsignadorPlanes {
                 mme.setPorcDesc(15);
             }
         }
+        mme.calcularPagoMensaul();
         return mme;
     }
 

@@ -7,38 +7,71 @@ import javax.swing.*;
 
 public class VistaGestionarPlan extends JPanel {
 
+    VistaMensajesUsuario vmu;
+
     public VistaGestionarPlan(VistaPrincipal base, ControladorVista cv) {
         setLayout(new BorderLayout(10, 10));
+        vmu = new VistaMensajesUsuario();
         JLabel titulo = new JLabel("Gestionar Planes", SwingConstants.CENTER);
         JButton insertarPlan = new JButton("Insertar Plan");
         JButton eliminarPlan = new JButton("Eliminar Plan");
         JButton remplazarPlan = new JButton("Remplazar Plan");
         JButton listarPlan = new JButton("Listar Planes por Estudiante");
+        JButton btnVolver = new JButton("Volver");
 
         insertarPlan.addActionListener(e -> {
             VistaIngresoCedula ci = new VistaIngresoCedula(base);
+            String cedula = ci.mostrarYObtenerCedula();
+            if (cedula == null) {
+                vmu.error("Cédula inválida o ingreso cancelado.");
+                return;
+            }
             VistaIngresoPlanes vip = new VistaIngresoPlanes(base);
             mostrarComoDialogo(this, vip, "Ingreso de Plan");
-            cv.nuevoPlan(vip.getPPP(), ci.mostrarYObtenerCedula());
+            PlanPostPago p = vip.getPPP();
+            if (p == null) {
+                vmu.error("Ingreso cancelado.");
+                return;
+            }
+            cv.nuevoPlan(p, cedula);
         });
 
         eliminarPlan.addActionListener(e -> {
             VistaIngresoCedula ci = new VistaIngresoCedula(base);
+            String cedula = ci.mostrarYObtenerCedula();
+            if (cedula == null) {
+                vmu.error("Cédula inválida o ingreso cancelado.");
+                return;
+            }
             VistaIngresoPlanes vip = new VistaIngresoPlanes(base);
             mostrarComoDialogo(this, vip, "Ingreso de Plan");
-            cv.eliminarPlan(vip.getPPP().getNombrePlan(), ci.mostrarYObtenerCedula());
+            PlanPostPago p = vip.getPPP();
+            if (p == null) {
+                vmu.error("Ingreso cancelado.");
+                return;
+            }
+            cv.eliminarPlan(p.getNombrePlan(), cedula);
         });
+
         remplazarPlan.addActionListener(e -> {
             VistaIngresoCedula ci = new VistaIngresoCedula(base);
-            String ced = ci.mostrarYObtenerCedula();
+            String cedula = ci.mostrarYObtenerCedula();
+            if (cedula == null) {
+                vmu.error("Cédula inválida o ingreso cancelado.");
+                return;
+            }
             JOptionPane.showMessageDialog(this,
-                    "Ingreso de datos del nuevo plan",
+                    "Ingreso de datos del Nuevo plan",
                     "Informacion",
                     JOptionPane.INFORMATION_MESSAGE);
 
             VistaIngresoPlanes vip = new VistaIngresoPlanes(base);
             mostrarComoDialogo(this, vip, "Ingreso de Plan");
             PlanPostPago p = vip.getPPP();
+            if (p == null) {
+                vmu.error("Ingreso cancelado.");
+                return;
+            }
             JOptionPane.showMessageDialog(this,
                     "Seleccione el nombre del plan a remplazar",
                     "Informacion",
@@ -46,14 +79,25 @@ public class VistaGestionarPlan extends JPanel {
 
             VistaIngresoPlanes rem = new VistaIngresoPlanes(base);
             mostrarComoDialogo(this, rem, "Ingreso de Plan");
-            String viejo = rem.getPPP().getNombrePlan();
-            cv.reemplazarPlan(ced, viejo, p);
+            PlanPostPago v = vip.getPPP();
+            if (v == null) {
+                vmu.error("Ingreso cancelado.");
+                return;
+            }
+            String viejo = v.getNombrePlan();
+            cv.reemplazarPlan(cedula, viejo, p);
         });
         listarPlan.addActionListener(e -> {
             VistaIngresoCedula ci = new VistaIngresoCedula(base);
-            String ced = ci.mostrarYObtenerCedula();
-            cv.mostrarPlanes(ced);
+            String cedula = ci.mostrarYObtenerCedula();
+            if (cedula == null) {
+                vmu.error("Cédula inválida o ingreso cancelado.");
+                return;
+            }
+            cv.mostrarPlanes(cedula);
         });
+
+        btnVolver.addActionListener(e -> base.cambiarVista("MENU"));
 
         JPanel botones = new JPanel(new GridLayout(4, 1, 10, 10));
         botones.add(insertarPlan);
@@ -61,6 +105,9 @@ public class VistaGestionarPlan extends JPanel {
         botones.add(remplazarPlan);
         botones.add(listarPlan);
 
+        JPanel footer = new JPanel();
+        footer.add(btnVolver);
+        add(footer, BorderLayout.SOUTH);
         add(titulo, BorderLayout.NORTH);
         add(botones, BorderLayout.CENTER);
 

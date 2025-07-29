@@ -39,7 +39,7 @@ public class FacturaDAO {
 
     public List<Factura> listarIndividual(String cedula) {
         List<Factura> lista = new ArrayList<>();
-        String sql = "SELECT * FROM Facturas WHERE ci/pasap = ?";
+        String sql = "SELECT * FROM Facturas WHERE cedula = ?";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             ps.setString(1, cedula);
             while (rs.next()) {
@@ -85,7 +85,7 @@ public class FacturaDAO {
     }
 
     public int numeroFactura() {
-        int i = 0;
+        int i = 1;
         String sql = "SELECT * FROM Facturas";
         try (Connection conn = ConexionSQLite.conectar(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
