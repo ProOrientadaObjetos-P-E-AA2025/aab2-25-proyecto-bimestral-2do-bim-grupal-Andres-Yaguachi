@@ -43,7 +43,6 @@ public class VistaGestionarFacturas extends JPanel {
         add(footer, BorderLayout.SOUTH);
 
         add(botones, BorderLayout.CENTER);
-
     }
 
 }

@@ -54,6 +54,7 @@ public class ControladorPlanesEstudiantiles {
 
     public void nuevoPlan(PlanPostPago ppp, String cedula) {
         Cliente est;
+        double mensual = 0;
         Factura f = new Factura();
         List<PlanPostPago> planuevo = new ArrayList<>();
         est = cdao.estudiante(cedula);
@@ -69,6 +70,10 @@ public class ControladorPlanesEstudiantiles {
             planuevo = est.getPlan();
             planuevo.add(ppp);
             est.setPlan(planuevo);
+            for (PlanPostPago plan : est.getPlan()) {
+                mensual += plan.getpagoMensual();
+            }
+            est.setPagoMensual(mensual);
             pdao.insertar(ppp, cedula);
             f.setCedula(est.getCedula());
             f.setPlan(ppp.getNombrePlan());

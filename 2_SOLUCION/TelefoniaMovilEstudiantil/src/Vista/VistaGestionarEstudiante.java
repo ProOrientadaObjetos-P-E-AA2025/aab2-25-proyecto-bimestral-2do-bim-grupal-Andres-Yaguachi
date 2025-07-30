@@ -54,7 +54,6 @@ public class VistaGestionarEstudiante extends JPanel {
             }
 
             lista.add(p);
-
             cv.nuevoEstudiante(c, lista);
         });
 
